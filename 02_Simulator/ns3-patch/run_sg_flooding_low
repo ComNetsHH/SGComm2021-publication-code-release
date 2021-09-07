@@ -1,0 +1,120 @@
+#!/bin/bash
+### Setup NS-3 Simulator
+./waf configure 
+./waf
+
+### Define Resource Locations
+# Simulation output directory
+outputDir="/simresults/sim/leonard/sg-flooding/XX_sim-results"
+# Simulation processed results output directory
+outputDirProcessed="/simresults/sim/leonard/sg-flooding/XX_sim-results_processed"
+# Directory in which to find all topology data
+topologyDir="/simresults/sim/leonard/sg-flooding/XX_output_control_files"
+# Result folder name
+outputName="dynamicLow"
+
+### Simulation Parameters
+# Feeder Topology
+topology="MCDS-7"
+# Total Duration of Simulation
+simtime=120
+# Which LL Technology to use: (0,WiFi/LTE), (1,WiFi), (2,LTE)
+llTechnology=1
+# RNG_Runs
+rngRuns=($(seq 1 1 1))
+# Use custom rtx timer [false=0,true=1]
+useDynamicRTX=1
+# Calculate peak average AoI
+doCalcPeak="true"
+
+### Study Parameters
+# Number of concurrent sequences to be studied
+numSeqs=($(seq 1 1 58))
+
+# RTX timeouts in ms for both LL technologies
+rtxTimeoutLTEs=($(seq 10 10 400))
+rtxTimeoutWiFis=($(seq 10 10 400))
+
+rtxTimeoutLTEs=(50)
+rtxTimeoutWiFis=(50)
+
+
+### Batch Parameter
+numParallel=7
+
+### Run Simulations
+# For each rngID
+for rngID in ${rngRuns[@]}
+do
+
+##### For each seqID
+    for numSeqID in ${numSeqs[@]}
+    do
+    
+############# For each rtxID
+        for rtxID in ${!rtxTimeoutLTEs[@]}
+        do
+        
+        rtxTimeoutWiFi=${rtxTimeoutWiFis[$rtxID]}
+        rtxTimeoutLTE=${rtxTimeoutLTEs[$rtxID]}
+        
+######### Check for parallel space and cont if free
+
+	while [ $(($(ps --no-headers -C sg-flooding | wc -l) + $(ps --no-headers -C MATLAB | wc -l))) -ge $numParallel ]
+	do
+	    sleep 10
+	done
+	
+############# Check and run Wifi version
+
+	if [ $llTechnology -eq 0 ] || [ $llTechnology -eq 1 ]
+	then
+	
+################# Setup variables
+	    
+	    experimentName=$outputName-wifi-$numSeqID-$rtxTimeoutWiFi-$useDynamicRTX-$rngID
+	    saveName=$outputDir/$outputName-wifi-$numSeqID-$rtxTimeoutWiFi-$useDynamicRTX-$rngID
+	    topologySeqName=$topologyDir/$topology/Seq-$numSeqID
+	    
+################# Setup directories
+
+	    mkdir -p "$saveName"
+	    
+################# Run simulations
+	    ./waf --cwd=$saveName --command-template="%s --RngRun=$rngID --simTime=$simtime --Topology=$topologySeqName --rtxTimeout=$rtxTimeoutWiFi --useLTE=false --dynamicRTX=$useDynamicRTX" --run scratch/sg-flooding/sg-flooding > $saveName/log.txt 2>&1 && 
+	    matlab20b -nodisplay -nosplash -nodesktop -r "cd ../../03_Result-Processing; addpath(genpath(pwd));d_result_processing(\"$outputDir\",\"$outputDirProcessed\",\"$experimentName\",$doCalcPeak); exit;" | tail -n +11 > $saveName/processingLog.txt &
+
+	    sleep 10
+	fi
+	
+############## Check for parallel space and cont if free
+
+	while [ $(($(ps --no-headers -C sg-flooding | wc -l) + $(ps --no-headers -C MATLAB | wc -l))) -ge $numParallel ]
+	do
+	    sleep 10
+	done
+
+############# Check and run LTE version
+
+	if [ $llTechnology -eq 0 ] || [ $llTechnology -eq 2 ]
+	then
+	
+################# Setup variables
+
+	    experimentName=$outputName-lte-$numSeqID-$rtxTimeoutWiFi-$useDynamicRTX-$rngID
+	    saveName=$outputDir/$outputName-lte-$numSeqID-$rtxTimeoutLTE-$useDynamicRTX-$rngID
+	    topologySeqName=$topologyDir/$topology/Seq-$numSeqID
+	    
+################# Setup directories
+
+	    mkdir -p "$saveName"
+	    
+################# Run simulations
+
+	    ./waf --cwd=$saveName --command-template="%s --RngRun=$rngID --simTime=$simtime --Topology=$topologySeqName --rtxTimeout=$rtxTimeoutLTE --useLTE=true --dynamicRTX=$useDynamicRTX" --run scratch/sg-flooding/sg-flooding > $saveName/log.txt 2>&1 && 
+	    matlab20b -nodisplay -nosplash -nodesktop -r "cd ../../03_Result-Processing; addpath(genpath(pwd));d_result_processing(\"$outputDir\",\"$outputDirProcessed\",\"$experimentName\",$doCalcPeak); exit;" | tail -n +11 > $saveName/processingLog.txt &
+	    sleep 10
+	fi
+        done
+    done
+done
