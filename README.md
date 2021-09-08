@@ -1,10 +1,10 @@
-Any references to this code, protocol, or results shall be realized by citing the original paper: $DOI. 
+Any references to this code, protocol, or results shall be realized by citing the original paper from IEEE Xplore.
 
 ## **Preface**
-This is the complementary code repository for the scientific publication "Minimizing Age of Information for Distributed Control in Smart Grids" by Fisser, Leonard and Timm-Giel, Andreas published at the IEEE International Conference on Communications, Control, and Computing Technologies for Smart Grids 2021 held in Aachen.
+This is the complementary code repository for the scientific publication 'Minimizing Age of Information for Distributed Control in Smart Grids' by Fisser, Leonard and Timm-Giel, Andreas published at the IEEE International Conference on Communications, Control, and Computing Technologies for Smart Grids 2021 held in Aachen, Germany.
 
 The provided codebase includes every necessary code to reproduce the results presented in the paper.
-While all presented code is made available for public use under GNU GPLv2.0, portions of the code use external software libraries.
+While all presented code is made available for public use under GNU GPLv2.0, portions of the code uses external software libraries.
 External code which is embedded in this repository is compatible with the selected licensing.
 Additional dependencies may have to be acquired to fully use the provided toolchain (for example a working NS-3 installation as well as Gurobi).
 The authors are aware that these dependencies do not completely fulfill the requirements for open-source code publications, but the trade-off has been made to achieve significant performance gains.
@@ -12,11 +12,10 @@ Optional replacements for proprietary libraries (such as Gurobi) are included wh
 
 As the complete toolchain is quite large and covers different programming language, possible reuse of published code will be difficult.
 However, in the hope that at least parts of the toolchain can be reused by other researchers, the code is structured into four parts.
-Each part can theoretically be used on its own and may only partially depend on its previous step.
+Each part can theoretically be used on its own and may only partially depend on the previous steps.
 
 The code is provided as is and does not claim to be part of any workshop or demo.
 Support is not guaranteed, but feel free to contact the corresponding author with any question regarding the code or protocol.
-
 
 ## **Toolchain Overview**
 ### **01_Pre-Processing**
@@ -33,10 +32,10 @@ Besides path configurations, the following parameters have to be specified:
 
 - **b1_mcds_processing / b2_mcds_processing**  
 The Minimum Connceted Dominating Set (MCDS) formulation is split into two steps due to unfavorable computational performance.
-In b1_mcds_processing, the optimization problem is formulated as an Linear Program, whereas b2_mcds_processing actually solves the problem.
+In b1_mcds_processing, the optimization problem is formulated as a Linear Program, whereas b2_mcds_processing solves the problem.
 This split was introduced to allow a restart of MATLAB between both calculation steps, allowing for a re-allocation of RAM.
 Besides path configurations, the following parameters have to be specified:
-  - use_lp: Either use the Gurobi LP MCDS solver, or use an unperformant exhaustive search algorithm.
+  - use_lp: Either use the Gurobi LP MCDS solver, or use a poorly performing exhaustive search algorithm.
   - start_communiation_range: The minimum node communication range used in creating the logical communication graph.
   - communication_range_increments: As we need a fully connected graph for the flooding algorithm presented in this paper, the communication range is incremented until each node is connected.
 
@@ -51,12 +50,12 @@ As the source code for NS-3 is [publicly available](https://www.nsnam.org/), onl
 The publication was based on the modified NS-3 codebase available [here](https://github.com/usnistgov/psc-ns3/tree/v3.0.1)
 The patch includes the required application files, simulation setup files and batch run scripts.
 For the actual execution of the simulations please refer to the scripts:
-- run_sg_flooding_high
-- run_sg_flooding_large_high
-- run_sg_flooding_large_low
-- run_sg_flooding_low
 - run_sg_flooding_matrix
-Each of these files corresponds to one evaluation conducted for the published paper.
+- run_sg_flooding_low
+- run_sg_flooding_high
+- run_sg_flooding_large_low
+- run_sg_flooding_large_high
+Each of these files corresponds to one evaluation conducted in the published paper.
 
 It has to be noted that both simulation scripts include an option to switch between 802.11 and LTE-D2D communication protocols.
 However, as only the CMSA-CA based technology was investigated in depth for the publication, no guarantees on the LTE-D2D implementation are given.
@@ -64,7 +63,7 @@ It is just left in the code, as it was present during the simulation campaign fo
 
 ### **03_Result-Processing**
 As the trace output of the simulation is quite convoluted and does not provide all important KPIs directly, a result processing step has to be executed.
-Theoretically, no configuration of this code should be necessary and it is only provided to explicitly show how each metric was calculated.
+Theoretically, no configuration of this code should be necessary, and it is only provided to explicitly show how each metric was calculated.
 The processing script should be ideally executed directly after the simulation finishes.
 For doing this please, refer to the command   
 `matlab20b -nodisplay -nosplash -nodesktop -r "cd ../../03_Result-Processing; addpath(genpath(pwd));d_result_processing(\"$outputDir\",\"$outputDirProcessed\",\"$experimentName\",$doCalcPeak); exit;" | tail -n +11 > $saveName/processingLog.txt &
