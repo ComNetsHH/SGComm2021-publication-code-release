@@ -1,7 +1,17 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-/*
- * Copyright (c)  2021 TUHH
- *
+/* 
+ * Code to replicate results of the publication 
+ * 'Minimizing Age of Information for Distributed Control in Smart Grids'
+ * published at the IEEE International Conference on Communications, Control, and Computing Technologies for Smart Grids 2021, Aachen, Germany.
+ * https://github.com/ComNetsHH/SGComm2021-publication-code-release
+ * 
+ * 
+ * Copyright (C) 2021  Institute of Communication Networks, 
+ *                     Hamburg University of Technology,
+ *                     https://www.tuhh.de/comnets
+ *           (C) 2021  Leonard Fisser, 
+ *                     leonard.fisser@tuhh.de
+ * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation;
@@ -14,8 +24,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Author: Leonard Fisser <leonard.fisser@tuhh.de>
  */
 
 #include "ns3/core-module.h"
