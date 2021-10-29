@@ -8,7 +8,7 @@ Any references to this code, protocol, or results shall be realized by citing th
 This is the complementary code repository for the scientific publication 'Minimizing Age of Information for Distributed Control in Smart Grids' by Fisser, Leonard and Timm-Giel, Andreas published at the IEEE International Conference on Communications, Control, and Computing Technologies for Smart Grids 2021 held in Aachen, Germany.
 
 The provided codebase includes every necessary code to reproduce the results presented in the paper.
-While all presented code is made available for public use under GNU GPLv2.0, portions of the code uses external software libraries.
+While all presented code is made available for public use under GNU GPLv2.0, portions of the code use external software libraries.
 External code which is embedded in this repository is compatible with the selected licensing.
 Additional dependencies may have to be acquired to fully use the provided toolchain (for example a working NS-3 installation as well as Gurobi).
 The authors are aware that these dependencies do not completely fulfill the requirements for open-source code publications, but the trade-off has been made to achieve significant performance gains.
@@ -25,8 +25,8 @@ Support is not guaranteed, but feel free to contact the corresponding author wit
 ### **01_Pre-Processing**
 In the first part, topology generation, MCDS calculation and simulation-data generation are conducted.
 The output of the first pre-processing script is a set of separated LVDGs.
-The whole pre-processing setup is further divided into 3 sup tasks accessible by the main scripts.
-In general, no changes have to be made to any files except the mains scripts. 
+The whole pre-processing setup is further divided into 3 sub-tasks accessible by the main scripts.
+In general, no changes have to be made to any files except the main scripts. 
 - **a_osm_processing**  
 In this script, an OpenStreetMap data export is used to create a configurable amount of Low Voltage Distribution Grids (LVDGs) using the methodology presented in the paper.
 Besides path configurations, the following parameters have to be specified:
@@ -51,7 +51,7 @@ Besides path configurations, no parameters have to be specified.
 ### **02_Simulator**
 The files provided in the second step include the actual implementation of the flooding protocol and simulation setup scripts.
 As the source code for NS-3 is [publicly available](https://www.nsnam.org/), only a software patch to be copied into the simulators main directory is included in this repository.
-The publication was based on the modified NS-3 codebase available [here](https://github.com/usnistgov/psc-ns3/tree/v3.0.1)
+The publication was based on the modified NS-3 codebase available [here](https://github.com/usnistgov/psc-ns3/tree/v3.0.1).
 The patch includes the required application files, simulation setup files and batch run scripts.
 For the actual execution of the simulations please refer to the scripts:
 - run_sg_flooding_matrix
@@ -97,7 +97,7 @@ These bash files automatically start the evaluations conducted in the paper and 
 In any case, please make sure you set up each script with correct options and path variables. If scripts fail, it is most likely because of misconfigured paths or missing input data.
 
 ## **Protocol Overview**
-The flooding protocol evaluated in the corresponding paper is based off the commonly known `Sequential Flooding` Protocol.
+The flooding protocol evaluated in the corresponding paper is based of the commonly known `Sequential Flooding` Protocol.
 It is extended by using a Minimum Connected Dominating Set of nodes as Virtual Backbone Network.
 Furthermore, the sequential nature can be softened by increasing the number of simultaneously occurring flooding processes.
 For some mode details please consult the following Message Sequence Chart, Header Map, the paper, or the implementation itself.
